@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <link rel="stylesheet" href="../static/css/styles.css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
         <title>{% block title%}{%endblock%}</title>
@@ -22,6 +22,15 @@
             #inline-link{
                 display:inline;
             }
+            .divider {
+            	height: 15px;
+            }
+            .divider.blue {
+            	background-color: #42C3C9;
+            }
+            .divider.green {
+            	background-color: #9FB80A;
+            }
         </style>
     </head>
     <body>
@@ -29,7 +38,7 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
             <a class="navbar-brand" href="#">
-            <img src="../static/img/logo.jpg" width="50" height="50" class="d-inline-block align-top" alt="">
+            <img src="{{ url_for('static', filename='img/logo.jpg') }}" width="50" height="50" class="d-inline-block align-top" alt="">
              Item Catalog Project
            </a>
            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,7 +51,7 @@
                 </li>
               <li class="nav-item dropdown">
                 <a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                 <img src="../static/img/user.png" width="40" height="40" class="d-inline-block align-top" alt="">
+                 <img src="{{ url_for('static', filename='img/user.png') }}" width="40" height="40" class="d-inline-block align-top" alt="">
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                   <a class="dropdown-item" href="#">Logout</a>
@@ -58,13 +67,12 @@
         <div class="container bg-light">
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb bg-transparent">
-                <li class="breadcrumb-item active" aria-current="page">Home</li>
                 {% block breadcrumb %}
                 {% endblock %}
               </ol>
             </nav>
             <hr>
-            
+
             {% block content %}
             {% endblock %}
 

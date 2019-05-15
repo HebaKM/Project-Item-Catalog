@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Item Catagory Project{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{{url_for('index')}}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{{url_for('showRecipes', cuisine_id=cuisine.id)}}">{{cuisine.name}}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Edit Cuisine</li>
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+        <div class="col-md-6 col-md-offset-1">
+            <h4 class="">Edit {{cuisine.name}}</h4>
+        </div>
+  </div>
+
+	<div class="row">
+		<div class="col-md-6 col-md-offset-1 padding-top">
+            <form action="" method="post">
+                {{ form.hidden_tag() }}
+                 <div class="mx-sm-3 mb-2">
+                    {{ form.name.label(for='name') }}
+                    {{ form.name(id='name', class="form-control") }}
+                    {% for error in form.name.errors %}
+                        <span class="alert alert-danger h-25 d-inline-block" role="alert">{{ error }}</span>
+                        <!-- <span class="invalid-feedback">{{ error }}</span> -->
+                    {% endfor %}
+                </div>
+                <br>
+                {{ form.submit(class='btn btn-primary mx-sm-3 mb-2') }}
+            </form>
+            <a href = '{{url_for('showRecipes', cuisine_id=cuisine.id)}}'>
+            <button class="btn btn-primary mx-sm-3 mb-2">
+            Cancel</button>
+            </a>
+		</div>
+	</div>
+    <!-- </div> -->
+
+{% endblock %}

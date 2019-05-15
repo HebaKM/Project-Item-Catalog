@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Item Catagory Project{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{{url_for('index')}}">Home</a></li>
+<li class="breadcrumb-item active" aria-current="page">New Cuisine</li>
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <!-- <div class="col"> -->
+
+        <!-- <div class="row divider blue">
+    		<div class="col-md-12"></div>
+    	</div> -->
+        <div class="col-md-6 col-md-offset-1">
+            <h4 class="">New Cuisine</h4>
+        </div>
+  </div>
+
+	<div class="row">
+		<div class="col-md-6 col-md-offset-1 padding-top">
+            <form action="" method="post">
+                {{ form.hidden_tag() }}
+                 <div class="form-group mx-sm-3 mb-2">
+                    {{ form.name.label(for='name') }}<br>
+                    {{ form.name(id='name', class="form-control") }}<br>
+                    {% for error in form.name.errors %}
+                        <span class="alert alert-danger" role="alert">[{{ error }}]</span>
+                        <!-- <div class="invalid-feedback"></div> -->
+                    {% endfor %}
+                </div>
+                <p>{{ form.submit(class='btn btn-primary mx-sm-3 mb-2') }}</p>
+            </form>
+		</div>
+	</div>
+    <!-- </div> -->
+
+{% endblock %}
