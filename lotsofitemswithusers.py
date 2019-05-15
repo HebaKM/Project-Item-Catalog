@@ -1,10 +1,10 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from models import Base, User, Cuisine, Recipe
+from database_setup import Base, User, Cuisine, Recipe
 
 
-engine = create_engine('sqlite:///catalogdb.db')
+engine = create_engine('sqlite:///catalogwithuserdb.db')
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
@@ -12,13 +12,13 @@ session = DBSession()
 # Create dummy user
 user = User(name="Heba",
             email="heba@gmail.com",
-            picture="")
+            picture="https://www.pinclipart.com/picdir/middle/200-2008697_account-customer-login-man-user-icon-login-icon.png")
 session.add(user)
 session.commit()
 
 # Create African Cuisine
 cuisine1 = Cuisine(user_id=1, name="African Cuisine")
-session.add(Cuisine1)
+session.add(cuisine1)
 session.commit()
 
 af_recipe1 = Recipe(user_id=1,

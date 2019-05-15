@@ -8,13 +8,13 @@ from sqlalchemy import create_engine
 Base = declarative_base()
 
 
-# class User(Base):
-#     __tablename__ = 'user'
-#
-#     id = Column(Integer, primary_key=True)
-#     name = Column(String(250), nullable=False)
-#     email = Column(String(250), nullable=False)
-#     picture = Column(String(250))
+class User(Base):
+    __tablename__ = 'user'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
+    email = Column(String(250), nullable=False)
+    picture = Column(String(250))
 
 
 class Cuisine(Base):
@@ -22,8 +22,8 @@ class Cuisine(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
-    # user_id = Column(Integer, ForeignKey('user.id'))
-    # user = relationship(User)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user = relationship(User)
 
 
 class Recipe(Base):
@@ -35,10 +35,10 @@ class Recipe(Base):
     creationDate = Column(DateTime, index=True, default=dt.utcnow)
     cuisine_id = Column(Integer, ForeignKey('cuisine.id'))
     cuisine = relationship(Cuisine)
-    # user_id = Column(Integer, ForeignKey('user.id'))
-    # user = relationship(User)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user = relationship(User)
 
 
-engine = create_engine('sqlite:///catalogwithdatedb.db')
+engine = create_engine('sqlite:///catalogwithuserdb.db')
 
 Base.metadata.create_all(engine)
