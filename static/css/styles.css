@@ -1,9 +1,23 @@
-/* .divider {
-	height: 15px;
+.row.vdivide [class*='col-']:not(:last-child):after {
+  background: #e0e0e0;
+  width: 1px;
+  content: "";
+  display:block;
+  position: absolute;
+  top:0;
+  bottom: 0;
+  right: 0;
+  min-height: 70px;
+}
+#inline-link{
+    display:inline;
+}
+.divider {
+    height: 15px;
 }
 .divider.blue {
-	background-color: #42C3C9;
+    background-color: #42C3C9;
 }
 .divider.green {
-	background-color: #9FB80A;
-} */
+    background-color: #9FB80A;
+}

@@ -47,6 +47,30 @@ def showLogin():
     # Passing state taken to client side
     return render_template('login.html', STATE=state)
 
+# User Helper Functions
+
+
+def createUser(login_session):
+    newUser = User(name=login_session['username'], email=login_session[
+                   'email'], picture=login_session['picture'])
+    session.add(newUser)
+    session.commit()
+    user = session.query(User).filter_by(email=login_session['email']).one()
+    return user.id
+
+
+def getUserInfo(user_id):
+    user = session.query(User).filter_by(id=user_id).one()
+    return user
+
+
+def getUserID(email):
+    try:
+        user = session.query(User).filter_by(email=email).one()
+        return user.id
+    except:
+        return None
+
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
@@ -200,6 +224,12 @@ def fbconnect():
     login_session['picture'] = data["data"]["url"]
 
     # If user not present create user
+    # try:
+    #     user = session.query(User).filter_by(email=login_session['email']).one()
+    #     user = user.id
+    # except Exception as e:
+    #     user = None
+
     user = getUserId(login_session['email'])
     if user is None:
         id = createUser(login_session)
@@ -220,30 +250,6 @@ def fbconnect():
 
     return output
 
-# User Helper Functions
-
-
-def createUser(login_session):
-    newUser = User(name=login_session['username'], email=login_session[
-                   'email'], picture=login_session['picture'])
-    session.add(newUser)
-    session.commit()
-    user = session.query(User).filter_by(email=login_session['email']).one()
-    return user.id
-
-
-def getUserInfo(user_id):
-    user = session.query(User).filter_by(id=user_id).one()
-    return user
-
-
-def getUserID(email):
-    try:
-        user = session.query(User).filter_by(email=email).one()
-        return user.id
-    except:
-        return None
-
 
 @app.route('/disconnect')
 def disconnect():
@@ -263,16 +269,21 @@ def disconnect():
             return response
 
         # Sending logout request and getting status code
-        url = 'https://accounts.google.com/o/oauth2/revoke'
-        params = {'token': access_token, 'alt': 'json'}
+        url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
+        params = {'alt': 'json'}
         result = requests.get(url, params=params, headers={
                               'content-type':
                               'application/x-www-form-urlencoded'})
         status_code = getattr(result, 'status_code')
 
+        # token = login_session['access_token']
+        # url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % token
+        # h = httplib2.Http()
+        # result = h.request(url, 'GET')[0]
+
         # If status code is 200, deleting login session data
         if status_code == 200:
-            del login_session['gplus_id']
+            del login_session['gid']
             del login_session['username']
             del login_session['picture']
             del login_session['email']
@@ -362,7 +373,10 @@ def index():
 
     else:
         latestRecipes = None
-    # return "Hi"
+
+    if 'username' not in login_session:
+        return render_template("publicIndex.html", cuisines=cuisines, recipes=latestRecipes)
+
     return render_template("index.html", cuisines=cuisines, recipes=latestRecipes)
 
 
@@ -422,7 +436,7 @@ def deleteCuisine(cuisine_id):
 def showRecipes(cuisine_id):
     cuisine = session.query(
         Cuisine).filter_by(id=cuisine_id).one()
-    creator = getUserInfo(restaurant.user_id)
+    creator = getUserInfo(cuisine.user_id)
     recipes = session.query(Recipe).filter_by(cuisine_id=cuisine_id).all()
     if 'username' not in login_session or creator.id != login_session['user_id']:
         return render_template('publicrecipes.html', recipes=recipes, cuisine=cuisine, creator=creator)
@@ -431,6 +445,9 @@ def showRecipes(cuisine_id):
 
 @app.route('/cuisine/<int:cuisine_id>/recipe/new', methods=['GET', 'POST'])
 def newRecipe(cuisine_id):
+    if 'username' not in login_session:
+        return redirect('/login')
+
     cuisine = session.query(
         Cuisine).filter_by(id=cuisine_id).one()
     form = RecipeForm()
@@ -449,8 +466,11 @@ def newRecipe(cuisine_id):
 def showRecipe(cuisine_id, recipe_id):
     cuisine = session.query(
         Cuisine).filter_by(id=cuisine_id).one()
+    creator = getUserInfo(cuisine.user_id)
     recipe = session.query(Recipe).filter_by(cuisine_id=cuisine_id, id=recipe_id).one()
-    return render_template('recipe.html', cuisine=cuisine, recipe=recipe)
+    if 'username' not in login_session or creator.id != login_session['user_id']:
+        return render_template('publicRecipe.html', cuisine=cuisine, recipe=recipe, creator=creator)
+    return render_template('recipe.html', cuisine=cuisine, recipe=recipe, creator=creator)
 
 
 @app.route('/cuisine/<int:cuisine_id>/recipe/<int:recipe_id>/edit/', methods=['GET', 'POST'])
@@ -459,6 +479,12 @@ def editRecipe(cuisine_id, recipe_id):
         Cuisine).filter_by(id=cuisine_id).one()
     editedRecipe = session.query(
         Recipe).filter_by(id=recipe_id).one()
+
+    if 'username' not in login_session:
+        return redirect('/login')
+    if editedRecipe.user_id != login_session['user_id']:
+        return "<script>function myFunction() {alert('You are not authorized to edit this Recipe. Please create your own Recipe in order to edit.');}</script><body onload='myFunction()''>"
+
     form = RecipeForm()
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -475,6 +501,12 @@ def deleteRecipe(cuisine_id, recipe_id):
         Cuisine).filter_by(id=cuisine_id).one()
     recipeToDelete = session.query(
         Recipe).filter_by(cuisine_id=cuisine_id, id=recipe_id).one()
+
+    if 'username' not in login_session:
+        return redirect('/login')
+    if recipeToDelete.user_id != login_session['user_id']:
+        return "<script>function myFunction() {alert('You are not authorized to Delete this Recipe. Please create your own Recipe in order to Delete.');}</script><body onload='myFunction()''>"
+
     form = DeleteForm()
     if request.method == 'POST':
         if form.validate_on_submit():

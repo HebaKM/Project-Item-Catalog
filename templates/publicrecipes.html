@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{{url_for('index')}}">Home</a></li>
+<li class="breadcrumb-item active" aria-current="page">{{cuisine.name}}</li>
+{% endblock %}
+
+{% block content %}
+  <div class="row vdivide">
+    <div class="col-4">
+        <div class="row p-3">
+            <p>This Cuisine was created by {{ creator.name }}.</p>
+            {%if 'username' not in session %}
+                <p>To add your own Cuisine please <a href="{{url_for('showLogin')}}">Login</a>.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col">
+
+    <h4 class="">{{cuisine.name}}</h4>
+<div class="clearfix">
+    <!-- <div class="card-deck d-flex justify-content-around"> -->
+
+
+        {% for recipe in recipes %}
+            <div class="card float-left m-2" style="">
+                <a class="card-link" href="{{url_for('showRecipe', cuisine_id=cuisine.id, recipe_id=recipe.id)}}">
+              <div class="card-body">
+                  <h5 class="card-title">{{recipe.name}}</h5>
+              </div>
+              </a>
+            </div>
+        {% endfor %}
+    </div>
+
+    </div>
+  </div>
+{% endblock %}

@@ -53,7 +53,7 @@ session.add(af_recipe3)
 session.commit()
 
 # Create Asian cuisine
-cuisine2 = Cuisine(user_id=1, name="Asian cuisine")
+cuisine2 = Cuisine(user_id=1, name="Asian Cuisine")
 session.add(cuisine2)
 session.commit()
 
@@ -87,7 +87,7 @@ session.add(as_recipe3)
 session.commit()
 
 # Create European cuisine
-cuisine3 = Cuisine(user_id=1, name="European cuisine")
+cuisine3 = Cuisine(user_id=1, name="European Cuisine")
 session.add(cuisine3)
 session.commit()
 
@@ -101,7 +101,7 @@ session.add(eu_recipe1)
 session.commit()
 
 # Create Oceanian cuisine
-cuisine4 = Cuisine(user_id=1, name="Oceanian cuisine")
+cuisine4 = Cuisine(user_id=1, name="Oceanian Cuisine")
 session.add(cuisine4)
 session.commit()
 
