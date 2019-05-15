@@ -5,7 +5,7 @@ import httplib2
 import json
 import requests
 
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask import session as login_session
 from flask import make_response
 from oauth2client.client import flow_from_clientsecrets
@@ -515,6 +515,27 @@ def deleteRecipe(cuisine_id, recipe_id):
             session.commit()
             return redirect(url_for('showRecipes', cuisine_id=cuisine_id))
     return render_template('deleteRecipe.html', recipe=recipeToDelete, form=form, cuisine=cuisine)
+
+
+# JSON APIs to view Restaurant Information
+@app.route('/cuisine/<int:cuisine_id>/recipes/JSON')
+def cuisineRecipesJSON(cuisine_id):
+    cuisine = session.query(Cuisine).filter_by(id=cuisine_id).one()
+    recipes = session.query(Recipe).filter_by(
+        cuisine_id=cuisine_id).all()
+    return jsonify(Recipe=[recipe.serialize for recipe in recipes])
+
+
+@app.route('/cuisine/<int:cuisine_id>/recipe/<int:recipe_id>/JSON')
+def recipesJSON(cuisine_id, recipe_id):
+    recipe = session.query(Recipe).filter_by(id=recipe_id).one()
+    return jsonify(recipe=recipe.serialize)
+
+
+@app.route('/cuisines/JSON')
+def cuisinesJSON():
+    cuisines = session.query(Cuisine).all()
+    return jsonify(cuisines=[cuisine.serialize for cuisine in cuisines])
 
 
 if __name__ == '__main__':
