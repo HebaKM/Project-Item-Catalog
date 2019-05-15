@@ -7,16 +7,21 @@ from sqlalchemy.sql.functions import coalesce
 
 
 from database_setup import Base, Cuisine, Recipe
-from forms import CuisineForm, DeleteCuisineForm
+from forms import CuisineForm, DeleteForm, RecipeForm
 
 app = Flask(__name__)
 
 # Connect to Database and create database session
-engine = create_engine('sqlite:///catalogdb.db')
+engine = create_engine('sqlite:///catalogwithdatedb.db')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
+
+
+@app.route('/login')
+def showLogin():
+    return 'Hi'
 
 
 @app.route('/')
@@ -28,60 +33,30 @@ def index():
     cuisines = session.query(Cuisine, stmt.c.recipe_count, Cuisine.id, Cuisine.name).\
         outerjoin(stmt, Cuisine.id == stmt.c.cuisine_id).order_by(Cuisine.name)
 
-    print(cuisines)
+    # print(cuisines)
     # cuisines = session.query(Cuisine).order_by(asc(Cuisine.name))
-    # cuisines = [
-    #     {
-    #         'name': 'test#1',
-    #         'count': 0
-    #     },
-    #     {
-    #         'name': 'test#2',
-    #         'count': 1
-    #     },
-    #     {
-    #         'name': 'test#3',
-    #         'count': 2
-    #     },
-    #     {
-    #         'name': 'test#4',
-    #         'count': 3
-    #     },
-    #     {
-    #         'name': 'test#5',
-    #         'count': 4
-    #     }
-    # ]
+
     # for c in cuisines:
     #     if c.recipe_count is None:
     #         print("It is None")
     #     print(type(c.recipe_count))
     #     print(c.recipe_count)
 
-    recipes = [
-        {
-            'name': 'test#1',
-            'cuisine': "test"
-        },
-        {
-            'name': 'test#2',
-            'cuisine': "test"
-        },
-        {
-            'name': 'test#3',
-            'cuisine': "test"
-        },
-        {
-            'name': 'test#4',
-            'cuisine': "test"
-        },
-        {
-            'name': 'test#5',
-            'cuisine': "test"
-        }
-    ]
+    latestRecipes = []
+    recipes = session.query(Recipe).order_by(
+        Recipe.creationDate.desc()).limit(10).all()
+    if recipes is not None:
+        for recipe in recipes:
+            latestRecipesDict = {'cuisine': '', 'recipe': ''}
+            latestRecipesDict['recipe'] = recipe
+            cuisine = session.query(Cuisine).filter_by(id=recipe.cuisine_id).one()
+            latestRecipesDict['cuisine'] = cuisine
+            latestRecipes.append(latestRecipesDict)
+
+    else:
+        latestRecipes = None
     # return "Hi"
-    return render_template("index.html", cuisines=cuisines, recipes=recipes)
+    return render_template("index.html", cuisines=cuisines, recipes=latestRecipes)
 
 
 @app.route('/cuisine/new', methods=['GET', 'POST'])
@@ -114,7 +89,7 @@ def editCuisine(cuisine_id):
 def deleteCuisine(cuisine_id):
     cuisineToDelete = session.query(
         Cuisine).filter_by(id=cuisine_id).one()
-    form = DeleteCuisineForm()
+    form = DeleteForm()
     if request.method == 'POST':
         if form.validate_on_submit():
             session.delete(cuisineToDelete)
@@ -132,9 +107,60 @@ def showRecipes(cuisine_id):
     return render_template('recipes.html', cuisine=cuisine, recipes=recipes)
 
 
-@app.route('/cuisine/<int:cuisine_id>/recipe/new')
+@app.route('/cuisine/<int:cuisine_id>/recipe/new', methods=['GET', 'POST'])
 def newRecipe(cuisine_id):
-    return "Wait for me I'm coming"
+    cuisine = session.query(
+        Cuisine).filter_by(id=cuisine_id).one()
+    form = RecipeForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            newRecipe = Recipe(name=form.name.data, description=form.description.data,
+                               cuisine_id=cuisine_id)
+            session.add(newRecipe)
+            session.commit()
+            flash('New Recipe %s Successfully Created' % (newRecipe.name))
+            return redirect(url_for('showRecipes', cuisine_id=cuisine_id))
+    return render_template('newRecipe.html', form=form, cuisine=cuisine)
+
+
+@app.route('/cuisine/<int:cuisine_id>/recipe/<int:recipe_id>/')
+def showRecipe(cuisine_id, recipe_id):
+    cuisine = session.query(
+        Cuisine).filter_by(id=cuisine_id).one()
+    recipe = session.query(Recipe).filter_by(cuisine_id=cuisine_id, id=recipe_id).one()
+    return render_template('recipe.html', cuisine=cuisine, recipe=recipe)
+
+
+@app.route('/cuisine/<int:cuisine_id>/recipe/<int:recipe_id>/edit/', methods=['GET', 'POST'])
+def editRecipe(cuisine_id, recipe_id):
+    cuisine = session.query(
+        Cuisine).filter_by(id=cuisine_id).one()
+    editedRecipe = session.query(
+        Recipe).filter_by(id=recipe_id).one()
+    form = RecipeForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            editedRecipe.name = form.name.data
+            editedRecipe.description = form.description.data
+            flash('Recipe Successfully Edited %s' % editedRecipe.name)
+            return redirect(url_for('showRecipes', cuisine_id=cuisine_id))
+    return render_template('editRecipe.html', form=form, cuisine=cuisine, recipe=editedRecipe)
+
+
+@app.route('/cuisine/<int:cuisine_id>/recipe/<int:recipe_id>/delete/', methods=['GET', 'POST'])
+def deleteRecipe(cuisine_id, recipe_id):
+    cuisine = session.query(
+        Cuisine).filter_by(id=cuisine_id).one()
+    recipeToDelete = session.query(
+        Recipe).filter_by(cuisine_id=cuisine_id, id=recipe_id).one()
+    form = DeleteForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            session.delete(recipeToDelete)
+            flash('%s Successfully Deleted' % recipeToDelete.name)
+            session.commit()
+            return redirect(url_for('showRecipes', cuisine_id=cuisine_id))
+    return render_template('deleteRecipe.html', recipe=recipeToDelete, form=form, cuisine=cuisine)
 
 
 if __name__ == '__main__':

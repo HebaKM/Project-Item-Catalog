@@ -27,12 +27,14 @@
                     {% endfor %}
                 </div>
                 <br>
+                 <div class="form-group mx-sm-3 mb-2">
                 {{ form.submit(class='btn btn-primary mx-sm-3 mb-2') }}
+                <a href = '{{url_for('showRecipes', cuisine_id=cuisine.id)}}' class="btn btn-primary mx-sm-3 mb-2">
+                Cancel
+                </a>
+                </div>
             </form>
-            <a href = '{{url_for('showRecipes', cuisine_id=cuisine.id)}}'>
-            <button class="btn btn-primary mx-sm-3 mb-2">
-            Cancel</button>
-            </a>
+
 		</div>
 	</div>
     <!-- </div> -->

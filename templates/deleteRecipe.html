@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Item Catagory Project{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"> Are you sure you want to delete {{recipe.name}}? </h2>
+
+<form action="#" method = 'post'>
+
+	{{ form.hidden_tag() }}
+
+		 {{ form.submit(class='btn btn-danger mx-sm-3 mb-2') }}
+		 <a href="{{url_for('showRecipes', cuisine_id=cuisine.id)}}"class="btn btn-primary mx-sm-3 mb-2" role="button">
+		 Cancel</a>
+
+
+</form>
+
+{% endblock %}

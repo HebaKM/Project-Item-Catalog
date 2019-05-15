@@ -34,16 +34,20 @@
     </div>
 
     <div class="col">
-    <h4 class="">Latest Items</h4>
+    <h4 class="">Latest Recipes</h4>
     <ul class="list-unstyled">
-        {% for recipe in recipes %}
-            <li class=""">
-                <a class="nav-link" style="display:inline;" href="#">
-                    {{recipe.name}}</a>
-                <a class="nav-link inline-link" style="display:inline;"href="#">
-                    <small class="text-muted">({{recipe.cuisine}})</small></a>
-            </li>
-        {% endfor %}
+        {% if latest is none %}
+                <h2>Please add recipes!</h2>
+        {% else %}
+            {% for recipe in recipes %}
+                <li class="nav-item">
+                    <a class="nav-link p-0" style="display:inline;" href="{{url_for('showRecipe', cuisine_id=recipe.cuisine.id, recipe_id=recipe.recipe.id)}}">
+                        {{recipe.recipe.name}}</a>
+                    <a class="nav-link p-0" style="display:inline;"href="{{url_for('showRecipes', cuisine_id=recipe.cuisine.id)}}">
+                        <small class="text-muted">({{recipe.cuisine.name}})</small></a>
+                </li>
+            {% endfor %}
+        {% endif %}
     </ul>
     </div>
   </div>
