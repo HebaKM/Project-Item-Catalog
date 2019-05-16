@@ -2,42 +2,51 @@
 {% block title %}Item Catagory - Homepage{% endblock %}
 
 {% block breadcrumb %}
-<li class="breadcrumb-item active" aria-current="page">Home</li>
+    <li class="breadcrumb-item active" aria-current="page">Home</li>
 {% endblock %}
 
 {% block content %}
-  <div class="row vdivide">
-    <div class="col-4">
-        <h4 class="">Cuisines
-            <a href="{{url_for('newCuisine')}}"><i class="fas fa-plus-square pr-4"></i></a>
 
+    <div class="row vdivide">
+        <div class="col-4">
+            <h4>Cuisines
+                <a href="{{url_for('newCuisine')}}">
+                    <i class="fas fa-plus-square pr-4"></i>
+                </a>
             </h4>
-        <ul class="list-group list-group-flush">
-            {% for cuisine in cuisines %}
-                <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent">
-                    <a class="nav-link" href="{{url_for('showRecipes', cuisine_id=cuisine.id)}}">{{cuisine.name}}</a>
-                    <span class="badge badge-primary badge-pill">{% if cuisine.recipe_count is none%}0{%else%}{{cuisine.recipe_count}}{%endif%}</span>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
+            <ul class="list-group list-group-flush">
+                {% for cuisine in cuisines %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent">
+                        <a class="nav-link" href="{{url_for('showRecipes', cuisine_id=cuisine.id)}}">{{cuisine.name}}</a>
+                        <span class="badge badge-primary badge-pill">
+                            <!-- {% if cuisine.recipe_count is none %}
+                                0
+                            {% else %}
+                                {{cuisine.recipe_count}}
+                            {% endif %} -->
+                            {{cuisine.recipes|length}}
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
 
-    <div class="col">
-    <h4 class="">Latest Recipes</h4>
-    <ul class="list-unstyled">
-        {% if latest is none %}
-                <h2>Please add recipes!</h2>
-        {% else %}
-            {% for recipe in recipes %}
-                <li class="nav-item">
-                    <a class="nav-link p-0" style="display:inline;" href="{{url_for('showRecipe', cuisine_id=recipe.cuisine.id, recipe_id=recipe.recipe.id)}}">
-                        {{recipe.recipe.name}}</a>
-                    <a class="nav-link p-0" style="display:inline;"href="{{url_for('showRecipes', cuisine_id=recipe.cuisine.id)}}">
-                        <small class="text-muted">({{recipe.cuisine.name}})</small></a>
-                </li>
-            {% endfor %}
-        {% endif %}
-    </ul>
+        <div class="col">
+            <h4>Latest Recipes</h4>
+            <ul class="list-unstyled">
+                {% if latest is none %}
+                        <h2>Please add recipes!</h2>
+                {% else %}
+                    {% for recipe in recipes %}
+                        <li class="nav-item">
+                            <a class="nav-link p-0" style="display:inline;" href="{{url_for('showRecipe', cuisine_id=recipe.cuisine.id, recipe_id=recipe.recipe.id)}}">
+                                {{recipe.recipe.name}}</a>
+                            <a class="nav-link p-0" style="display:inline;"href="{{url_for('showRecipes', cuisine_id=recipe.cuisine.id)}}">
+                                <small class="text-muted">({{recipe.cuisine.name}})</small></a>
+                        </li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        </div>
     </div>
-  </div>
 {% endblock %}

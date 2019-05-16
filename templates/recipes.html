@@ -1,43 +1,40 @@
 {% extends "base.html" %}
 
+{% block title %}{{cuisine.name}}'s Recipes{% endblock %}
+
 {% block breadcrumb %}
-<li class="breadcrumb-item"><a href="{{url_for('index')}}">Home</a></li>
-<li class="breadcrumb-item active" aria-current="page">{{cuisine.name}}</li>
+    <li class="breadcrumb-item"><a href="{{url_for('index')}}">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{cuisine.name}}</li>
 {% endblock %}
 
 {% block content %}
-  <div class="row vdivide">
-    <div class="col-4">
-        <div class="row p-3">
-            <a href="{{url_for('editCuisine', cuisine_id=cuisine.id)}}" class="btn btn-primary" role="button">Edit Cuisine</a>
-        </div>
-        <div class="row p-3">
-            <a href="{{url_for('deleteCuisine', cuisine_id=cuisine.id)}}" class="btn btn-danger" role="button">Delete Cuisine</a>
-        </div>
-
-        <div class="row p-3">
-            <a href="{{url_for('newRecipe', cuisine_id=cuisine.id)}}" class="btn btn-primary" role="button">Add New Recipe</a>
-        </div>
-    </div>
-
-    <div class="col">
-
-    <h4 class="">{{cuisine.name}}</h4>
-<div class="clearfix">
-    <!-- <div class="card-deck d-flex justify-content-around"> -->
-
-
-        {% for recipe in recipes %}
-            <div class="card float-left m-2" style="">
-                <a class="card-link" href="{{url_for('showRecipe', cuisine_id=cuisine.id, recipe_id=recipe.id)}}">
-              <div class="card-body">
-                  <h5 class="card-title">{{recipe.name}}</h5>
-              </div>
-              </a>
+    <div class="row vdivide">
+        <div class="col-4">
+            <div class="row p-3">
+                <a href="{{url_for('editCuisine', cuisine_id=cuisine.id)}}" class="btn btn-primary" role="button">Edit Cuisine</a>
             </div>
-        {% endfor %}
-    </div>
+            <div class="row p-3">
+                <a href="{{url_for('deleteCuisine', cuisine_id=cuisine.id)}}" class="btn btn-danger" role="button">Delete Cuisine</a>
+            </div>
 
+            <div class="row p-3">
+                <a href="{{url_for('newRecipe', cuisine_id=cuisine.id)}}" class="btn btn-primary" role="button">Add New Recipe</a>
+            </div>
+        </div>
+
+        <div class="col">
+            <h4>{{cuisine.name}}</h4>
+            <div class="clearfix">
+                {% for recipe in recipes %}
+                    <div class="card float-left m-2">
+                        <a class="card-link" href="{{url_for('showRecipe', cuisine_id=cuisine.id, recipe_id=recipe.id)}}">
+                          <div class="card-body">
+                              <h5 class="card-title">{{recipe.name}}</h5>
+                          </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
-  </div>
 {% endblock %}

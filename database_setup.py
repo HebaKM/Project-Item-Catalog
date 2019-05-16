@@ -42,7 +42,7 @@ class Recipe(Base):
     description = Column(String(250))
     creationDate = Column(DateTime, index=True, default=dt.utcnow)
     cuisine_id = Column(Integer, ForeignKey('cuisine.id'))
-    cuisine = relationship(Cuisine)
+    cuisine = relationship(Cuisine, backref='recipes')
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
 

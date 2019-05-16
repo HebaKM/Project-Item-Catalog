@@ -1,47 +1,46 @@
 {% extends "base.html" %}
 
+{% block title %}Item Catalog - Login{% endblock %}
+
 {% block content %}
-<!-- linking google API ajax -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
-<!-- <meta name="google-signin-client_id" content="461766030377-pg1hmjb431gc19ubfp5uh91rrjj84pc0.apps.googleusercontent.com"> -->
+    <!-- linking google API ajax -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
 
-<script>
-  function start() {
-    gapi.load('auth2', function () {
-      // Initializing google client id
-      auth2 = gapi.auth2.init({
-        client_id: '461766030377-pg1hmjb431gc19ubfp5uh91rrjj84pc0.apps.googleusercontent.com'
-        // scope: 'openid email',
-      });
-    });
-  }
-</script>
-
-
-<div class="container">
-  <br>
-  <br>
-  <div class="row">
-    <div class="col-sm-6">
-      <!-- Google signin button -->
-      <button id="signinButton">Login with Google</button>
-    </div>
-    <div class="col-sm-6">
-      <!-- Facebook signin button -->
-      <button class="s">
-
-        <!-- Calls sendTokenToServer function on successfull login -->
-        <fb:login-button scope="public_profile,email" onlogin="sendTokenToServer();">
-          <a href='javascript:sendTokenToServer()'>Login with Facebook</a>
-
-        </fb:login-button>
+    <script>
+      function start() {
+        gapi.load('auth2', function () {
+          // Initializing google client id
+          auth2 = gapi.auth2.init({
+            client_id: '461766030377-pg1hmjb431gc19ubfp5uh91rrjj84pc0.apps.googleusercontent.com'
+            // scope: 'openid email',
+          });
+        });
+      }
+    </script>
 
 
-      </button>
 
-    </div>
-  </div>
+    <br>
+    <br>
+    <div class="row">
+        <!-- Google signin button -->
+        <div class="col-sm-6">
+          <button class="btn btn-light bg-white" id="signinButton">
+              <img class="mr-2 mb-1" src="{{ url_for('static', filename='img/google16.png') }}" alt="google logo">Login with Google</button>
+        </div>
+
+        <!-- Facebook signin button -->
+        <div class="col-sm-6">
+          <button class="btn btn-link">
+            <!-- Calls sendTokenToServer function on successfull login -->
+            <fb:login-button scope="public_profile,email" onlogin="sendTokenToServer();">
+                <a href='javascript:sendTokenToServer()'>Login with Facebook</a>
+            </fb:login-button>
+          </button>
+
+        </div>
+      </div>
 
 
   <!-- Login success view container -->

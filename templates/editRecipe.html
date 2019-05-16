@@ -1,51 +1,47 @@
 {% extends "base.html" %}
-
+{% block title%}Edit Recipe{%endblock%}
 {% block breadcrumb %}
-<li class="breadcrumb-item"><a href="{{url_for('index')}}">Home</a></li>
-<li class="breadcrumb-item"><a href="{{url_for('showRecipes', cuisine_id=cuisine.id)}}">{{cuisine.name}}</a></li>
-<li class="breadcrumb-item"><a href="{{url_for('showRecipe', cuisine_id=cuisine.id, recipe_id=recipe.id)}}">{{recipe.name}}</a></li>
-<li class="breadcrumb-item active" aria-current="page">Edit Recipe</li>
+    <li class="breadcrumb-item"><a href="{{url_for('index')}}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{{url_for('showRecipes', cuisine_id=cuisine.id)}}">{{cuisine.name}}</a></li>
+    <li class="breadcrumb-item"><a href="{{url_for('showRecipe', cuisine_id=cuisine.id, recipe_id=recipe.id)}}">{{recipe.name}}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Edit Recipe</li>
 {% endblock %}
 
 {% block content %}
-  <div class="row">
+
+    <div class="row">
         <div class="col-md-6 col-md-offset-1">
             <h4 class="">Edit {{recipe.name}}</h4>
         </div>
-  </div>
+    </div>
 
 	<div class="row">
 		<div class="col-md-6 col-md-offset-1 padding-top">
-            <form action="" method="post" >
+            <form action="" method="post">
                 {{ form.hidden_tag() }}
                 <div class="form-group mx-sm-3 mb-2">
                    {{ form.name.label(for='name') }}<br>
                    {{ form.name(id='name', class="form-control") }}<br>
                    {% for error in form.name.errors %}
-                       <span class="alert alert-danger" role="alert">[{{ error }}]</span>
-                       <!-- <div class="invalid-feedback"></div> -->
+                       <span class="alert alert-danger" role="alert">{{ error }}</span>
                    {% endfor %}
                </div>
+               <br>
                <div class="form-group mx-sm-3 mb-2">
                   {{ form.description.label(for='description') }}<br>
                   {{ form.description(id='description', class="form-control") }}<br>
                   {% for error in form.description.errors %}
-                      <span class="alert alert-danger" role="alert">[{{ error }}]</span>
-                      <!-- <div class="invalid-feedback"></div> -->
+                      <span class="alert alert-danger" role="alert">{{ error }}</span>
                   {% endfor %}
               </div>
+              <br>
               <div class="form-group mx-sm-3 mb-2">
-               {{ form.submit(class='btn btn-primary mx-sm-3 mb-2') }}
-               <a href = '{{url_for('showRecipe',cuisine_id=cuisine.id, recipe_id=recipe.id)}}' class="btn btn-primary mx-sm-3 mb-2">
-               Cancel
-               </a>
-
-               </div>
+                   {{ form.submit(class='btn btn-primary mx-sm-3 mb-2') }}
+                   <a href = "{{url_for('showRecipe',cuisine_id=cuisine.id, recipe_id=recipe.id)}}" class="btn btn-primary mx-sm-3 mb-2">
+                       Cancel
+                   </a>
+              </div>
             </form>
-
-
 		</div>
 	</div>
-    <!-- </div> -->
-
 {% endblock %}

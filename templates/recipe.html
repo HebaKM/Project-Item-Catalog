@@ -1,36 +1,31 @@
 {% extends "base.html" %}
 
+{% block title %}{{cuisine.name}} Recipe{% endblock %}
+
 {% block breadcrumb %}
-<li class="breadcrumb-item"><a href="{{url_for('index')}}">Home</a></li>
-<li class="breadcrumb-item"><a href="{{url_for('showRecipes', cuisine_id=cuisine.id)}}">{{cuisine.name}}</a></li>
-<li class="breadcrumb-item active" aria-current="page">{{recipe.name}}</li>
+    <li class="breadcrumb-item"><a href="{{url_for('index')}}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{{url_for('showRecipes', cuisine_id=cuisine.id)}}">{{cuisine.name}}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{recipe.name}}</li>
 {% endblock %}
 
 {% block content %}
-  <div class="row vdivide">
-    <div class="col-4">
-        <div class="row p-3">
-            <a href="{{url_for('editRecipe', cuisine_id=cuisine.id, recipe_id=recipe.id)}}" class="btn btn-primary" role="button">Edit Recipe</a>
+    <div class="row vdivide">
+        <div class="col-4">
+            <div class="row p-3">
+                <a href="{{url_for('editRecipe', cuisine_id=cuisine.id, recipe_id=recipe.id)}}" class="btn btn-primary" role="button">Edit Recipe</a>
+            </div>
+            <div class="row p-3">
+                <a href="{{url_for('deleteRecipe', cuisine_id=cuisine.id, recipe_id=recipe.id)}}" class="btn btn-danger" role="button">Delete Recipe</a>
+            </div>
         </div>
-        <div class="row p-3">
-            <a href="{{url_for('deleteRecipe', cuisine_id=cuisine.id, recipe_id=recipe.id)}}" class="btn btn-danger" role="button">Delete Recipe</a>
-        </div>
-    </div>
 
-    <div class="col">
-
-    <h4 class="">{{recipe.name}}</h4>
-        <div class="">
-                <div class="card m-2" style="">
-
-                      <div class="card-body">
-                          <h5 class="card-title">{{recipe.description}}</h5>
-                      </div>
-
+        <div class="col">
+            <h4 class="">{{recipe.name}}</h4>
+            <div class="card m-2">
+                <div class="card-body">
+                    <h5 class="card-title">{{recipe.description}}</h5>
                 </div>
-
+            </div>
         </div>
-
     </div>
-  </div>
 {% endblock %}
