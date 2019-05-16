@@ -680,8 +680,22 @@ def cuisinesJSON():
     cuisines = session.query(Cuisine).all()
     return jsonify(cuisines=[cuisine.serialize for cuisine in cuisines])
 
+# Error Handlers
+@app.errorhandler(404)
+def not_found_error(error):
+    """Handles 404 error"""
+    return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+def internal_error(error):
+    """Handles 500 error"""
+    # reset the session to a clean state
+    session.rollback()
+    return render_template('500.html'), 500
+
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
-    app.debug = True
+    app.debug = False
     app.run(host='0.0.0.0', port=5000, threaded=False)
