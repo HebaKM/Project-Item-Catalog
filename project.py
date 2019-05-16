@@ -644,8 +644,9 @@ def deleteRecipe(cuisine_id, recipe_id):
 
 
 # JSON APIs to view Cuisine Information
-@app.route('/cuisines/all/JSON')
+@app.route('/cuisines/JSON')
 def allCuisinesJSON():
+    """JSON endpoint API route for all cuisines"""
     # Fetches cuisines and related recipes
     cuisines = (session.query(Cuisine)
                 .options(joinedload(Cuisine.recipes)).all())
@@ -674,12 +675,6 @@ def recipeJSON(cuisine_id, recipe_id):
     return jsonify(recipe=recipe.serialize)
 
 
-@app.route('/cuisines/JSON')
-def cuisinesJSON():
-    """JSON endpoint API route for all cuisines"""
-    cuisines = session.query(Cuisine).all()
-    return jsonify(cuisines=[cuisine.serialize for cuisine in cuisines])
-
 # Error Handlers
 @app.errorhandler(404)
 def not_found_error(error):
@@ -697,5 +692,5 @@ def internal_error(error):
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
-    app.debug = False
+    app.debug = True
     app.run(host='0.0.0.0', port=5000, threaded=False)
