@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 import random
 import string
-import httplib2
 import json
-import requests
 
 from sqlalchemy.sql.functions import coalesce
 from sqlalchemy.orm import sessionmaker, joinedload
@@ -14,6 +12,8 @@ from flask import make_response
 from flask import session as login_session
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask import jsonify
+import httplib2
+import requests
 
 from database_setup import Base, User, Cuisine, Recipe
 from forms import CuisineForm, DeleteForm, RecipeForm
