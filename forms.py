@@ -16,5 +16,7 @@ class DeleteForm(FlaskForm):
 
 class RecipeForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
-    description = TextAreaField('Description', validators=[DataRequired(), Length(min=0, max=250)])
+    description = TextAreaField('Description',
+                                validators=[DataRequired(),
+                                            Length(min=0, max=250)])
     submit = SubmitField('Save')
