@@ -1,6 +1,8 @@
 bootstrap-4.3.1-dist
 client_secrets.json
 fb_client_secret.json
+lotsofitems.py
+catalogwithuserdb.db
 
 # Packages
 __pycache__
